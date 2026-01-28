@@ -1,0 +1,141 @@
+<!--pages/dish-detail/dish-detail.wxml-->
+<view class="container" wx:if="{{!loading && dish}}">
+  <!-- 菜品图片 -->
+  <view class="dish-image-section">
+    <image class="dish-image" src="{{getImageUrl(dish.image)}}" mode="aspectFill" bindtap="onPreviewImage" data-url="{{getImageUrl(dish.image)}}"></image>
+    
+    <!-- 收藏按钮浮动在图片上 -->
+    <view class="favorite-btn" bindtap="onToggleFavorite">
+      <text class="heart-icon {{isFavorite ? 'favorited' : ''}}">{{isFavorite ? '❤️' : '🤍'}}</text>
+    </view>
+    
+    <view class="image-overlay">
+      <view class="dish-title">{{dish.name}}</view>
+      <view class="dish-meta">
+        <text class="dish-category">{{dish.categoryName}}</text>
+        <text class="dish-time">{{formatRelativeTime(dish.createTime)}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 菜品信息 -->
+  <view class="dish-info-section card">
+    <view class="info-row">
+      <view class="info-item">
+        <text class="info-label">难度</text>
+        <text class="info-value" style="color: {{getDifficultyColor(dish.difficulty)}}">{{getDifficultyText(dish.difficulty)}}</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">时间</text>
+        <text class="info-value">{{dish.cookingTime}}分钟</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">份数</text>
+        <text class="info-value">{{dish.servings || 1}}人份</text>
+      </view>
+      <view class="info-item" wx:if="{{dish.calories}}">
+        <text class="info-label">热量</text>
+        <text class="info-value">{{dish.calories}}卡</text>
+      </view>
+    </view>
+    
+    <view class="stats-row">
+      <view class="stat-item">
+        <text class="stat-icon">👁️</text>
+        <text class="stat-text">{{dish.viewCount || 0}}次浏览</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-icon">❤️</text>
+        <text class="stat-text">{{dish.collectCount || 0}}次收藏</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 菜品描述 -->
+  <view class="description-section card" wx:if="{{dish.description}}">
+    <view class="section-title">菜品介绍</view>
+    <text class="description-text">{{dish.description}}</text>
+  </view>
+
+  <!-- 食材清单 -->
+  <view class="ingredients-section card" wx:if="{{ingredients.length > 0}}">
+    <view class="section-title">食材清单</view>
+    <view class="ingredients-list">
+      <view class="ingredient-item" wx:for="{{ingredients}}" wx:key="id">
+        <text class="ingredient-name">{{item.name}}</text>
+        <text class="ingredient-amount">{{item.amount}}{{item.unit}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 制作步骤预览 -->
+  <view class="steps-preview-section card" wx:if="{{steps.length > 0}}">
+    <view class="section-title">制作步骤 ({{steps.length}}步)</view>
+    <view class="steps-preview-list">
+      <view class="step-preview-item" wx:for="{{steps}}" wx:key="id" wx:for-index="index">
+        <view class="step-number">{{index + 1}}</view>
+        <view class="step-content">
+          <image class="step-image" src="{{getImageUrl(item.image)}}" mode="aspectFill" wx:if="{{item.image}}" bindtap="onPreviewImage" data-url="{{getImageUrl(item.image)}}"></image>
+          <text class="step-description">{{item.description}}</text>
+          <view class="step-meta" wx:if="{{item.duration || item.temperature}}">
+            <text class="step-duration" wx:if="{{item.duration}}">⏱ {{item.duration}}分钟</text>
+            <text class="step-temperature" wx:if="{{item.temperature}}">🌡 {{item.temperature}}°C</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-actions">
+    <button class="action-btn favorite-action {{isFavorite ? 'favorited' : ''}}" bindtap="onToggleFavorite">
+      <text class="heart-icon">{{isFavorite ? '❤️' : '🤍'}}</text>
+      <text class="btn-text">{{isFavorite ? '已收藏' : '收藏'}}</text>
+    </button>
+    <button class="action-btn primary" bindtap="onStartCooking" wx:if="{{steps.length > 0}}">
+      <text class="btn-text">开始制作</text>
+    </button>
+    <button class="action-btn secondary" open-type="share">
+      <text class="btn-text">分享菜谱</text>
+    </button>
+  </view>
+</view>
+
+<!-- 制作步骤弹窗 -->
+<view class="steps-modal" wx:if="{{showSteps}}" catchtouchmove="true">
+  <view class="steps-modal-content">
+    <view class="steps-header">
+      <text class="steps-title">制作步骤</text>
+      <text class="steps-progress">{{currentStepIndex + 1}}/{{steps.length}}</text>
+      <text class="close-btn" bindtap="onCloseSteps">✕</text>
+    </view>
+    
+    <view class="current-step" wx:if="{{steps[currentStepIndex]}}">
+      <view class="step-number-large">第{{currentStepIndex + 1}}步</view>
+      <image class="step-image-large" src="{{getImageUrl(steps[currentStepIndex].image)}}" mode="aspectFill" wx:if="{{steps[currentStepIndex].image}}" bindtap="onPreviewImage" data-url="{{getImageUrl(steps[currentStepIndex].image)}}"></image>
+      <text class="step-description-large">{{steps[currentStepIndex].description}}</text>
+      <view class="step-meta-large" wx:if="{{steps[currentStepIndex].duration || steps[currentStepIndex].temperature}}">
+        <text class="step-duration" wx:if="{{steps[currentStepIndex].duration}}">⏱ {{steps[currentStepIndex].duration}}分钟</text>
+        <text class="step-temperature" wx:if="{{steps[currentStepIndex].temperature}}">🌡 {{steps[currentStepIndex].temperature}}°C</text>
+      </view>
+    </view>
+    
+    <view class="steps-navigation">
+      <button class="nav-btn" bindtap="onPrevStep" disabled="{{currentStepIndex === 0}}">上一步</button>
+      <button class="nav-btn primary" bindtap="onNextStep" disabled="{{currentStepIndex === steps.length - 1}}">
+        {{currentStepIndex === steps.length - 1 ? '完成' : '下一步'}}
+      </button>
+    </view>
+  </view>
+</view>
+
+<!-- 加载状态 -->
+<view class="loading" wx:if="{{loading}}">
+  <text>加载中...</text>
+</view>
+
+<!-- 空状态 -->
+<view class="empty" wx:if="{{!loading && !dish}}">
+  <text class="empty-icon">🍽️</text>
+  <text class="empty-text">菜品不存在</text>
+</view>

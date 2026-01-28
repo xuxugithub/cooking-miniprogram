@@ -1,0 +1,121 @@
+<!--pages/index/index.wxml-->
+<view class="container">
+  <!-- 顶部搜索栏 -->
+  <view class="top-search-bar">
+    <view class="search-input-container">
+      <text class="search-icon">🔍</text>
+      <input class="search-input-field" 
+             placeholder="搜索菜品、食材..." 
+             value="{{searchValue}}"
+             bindinput="onSearchInput"
+             bindconfirm="onSearchConfirm"
+             confirm-type="search" />
+      <text class="search-btn" bindtap="onSearchConfirm" wx:if="{{searchValue}}">搜索</text>
+    </view>
+  </view>
+
+  <!-- Banner轮播 -->
+  <view class="banner-section" wx:if="{{banners.length > 0}}">
+    <swiper class="banner-swiper" indicator-dots="{{true}}" autoplay="{{true}}" interval="{{3000}}" duration="{{500}}">
+      <swiper-item wx:for="{{banners}}" wx:key="id" bindtap="onBannerTap" data-item="{{item}}">
+        <image class="banner-image" src="{{getImageUrl(item.image)}}" mode="aspectFill"></image>
+        <view class="banner-overlay">
+          <view class="banner-title" wx:if="{{item.title}}">{{item.title}}</view>
+          <view class="banner-subtitle">厨小教，零基础学做菜超简单</view>
+        </view>
+      </swiper-item>
+    </swiper>
+  </view>
+
+  <!-- 分类导航 -->
+  <view class="category-section" wx:if="{{categories.length > 0}}">
+    <view class="category-grid">
+      <view class="category-item" wx:for="{{categories}}" wx:key="id" bindtap="onCategoryTap" data-category="{{item}}" wx:if="{{index < 6}}">
+        <view class="category-icon-wrapper">
+          <image class="category-icon" src="{{getImageUrl(item.image)}}" mode="aspectFill"></image>
+        </view>
+        <text class="category-name">{{item.name}}</text>
+      </view>
+      <view class="category-item" bindtap="goToCategory">
+        <view class="category-icon-wrapper more-icon">
+          <text class="more-text">更多</text>
+        </view>
+        <text class="category-name">更多</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 个人推荐菜品 -->
+  <view class="recommend-section" wx:if="{{allDishes.length > 0}}">
+    <view class="section-header">
+      <text class="section-title">全部菜品</text>
+      <!-- 排序选项 -->
+      <view class="sort-options">
+        <view class="sort-item {{currentSortType === item.key ? 'active' : ''}}" 
+              wx:for="{{sortOptions}}" 
+              wx:key="key" 
+              bindtap="onSortChange" 
+              data-sort="{{item.key}}">
+          {{item.name}}
+        </view>
+      </view>
+    </view>
+    <view class="recommend-grid">
+      <view class="recommend-item" wx:for="{{allDishes}}" wx:key="id" bindtap="onDishTap" data-dish="{{item}}">
+        <image class="recommend-image" src="{{getImageUrl(item.image)}}" mode="aspectFill"></image>
+        <view class="recommend-info">
+          <text class="recommend-name">{{item.name}}</text>
+          <view class="recommend-meta">
+            <text class="recommend-category">{{item.categoryName}}</text>
+            <text class="recommend-time">{{item.cookingTime}}分钟</text>
+          </view>
+          <view class="recommend-stats">
+            <text class="stat-item">👁️ {{item.viewCount || 0}}</text>
+            <text class="stat-item">❤️ {{item.collectCount || 0}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 加载更多 -->
+    <view class="load-more" wx:if="{{loadingMore}}">
+      <text>加载中...</text>
+    </view>
+    
+    <!-- 没有更多数据 -->
+    <view class="no-more" wx:if="{{!hasMore && allDishes.length > 0}}">
+      <text>没有更多数据了</text>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty" wx:if="{{!loading && banners.length === 0 && categories.length === 0 && allDishes.length === 0}}">
+    <text class="empty-icon">🍽️</text>
+    <text class="empty-text">暂无数据</text>
+  </view>
+
+  <!-- 底部导航栏 -->
+  <view class="bottom-nav">
+    <view class="nav-item active">
+      <view class="nav-icon">🏠</view>
+      <text class="nav-text">下厨房</text>
+    </view>
+    <view class="nav-item" bindtap="goToCategory">
+      <view class="nav-icon">📂</view>
+      <text class="nav-text">分类</text>
+    </view>
+    <view class="nav-item" bindtap="goToFavorites">
+      <view class="nav-icon">⭐</view>
+      <text class="nav-text">收藏</text>
+    </view>
+    <view class="nav-item" bindtap="goToProfile">
+      <view class="nav-icon">👤</view>
+      <text class="nav-text">我的</text>
+    </view>
+  </view>
+</view>

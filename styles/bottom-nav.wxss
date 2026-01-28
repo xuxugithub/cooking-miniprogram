@@ -1,0 +1,52 @@
+/* 通用底部导航栏样式 */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  display: flex;
+  padding: 10rpx 0 20rpx;
+  border-top: 1rpx solid #f0f0f0;
+  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.08);
+  z-index: 1000;
+}
+
+.nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10rpx;
+  transition: all 0.3s ease;
+}
+
+.nav-item.active {
+  color: #ff6b35;
+}
+
+.nav-item.active .nav-icon {
+  transform: scale(1.1);
+}
+
+.nav-icon {
+  font-size: 40rpx;
+  margin-bottom: 5rpx;
+  transition: all 0.3s ease;
+}
+
+.nav-text {
+  font-size: 20rpx;
+  color: #666;
+  font-weight: 500;
+}
+
+.nav-item.active .nav-text {
+  color: #ff6b35;
+  font-weight: 600;
+}
+
+/* 为有底部导航栏的页面添加底部间距 */
+.container-with-nav {
+  padding-bottom: 120rpx;
+}

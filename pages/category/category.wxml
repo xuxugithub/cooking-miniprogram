@@ -1,0 +1,83 @@
+<!--pages/category/category.wxml-->
+<view class="container">
+  <!-- 分类列表 -->
+  <view class="categories-section" wx:if="{{!currentCategoryId && type === 'category' && !loading}}">
+    <view class="categories-grid">
+      <view class="category-item" wx:for="{{categories}}" wx:key="id" bindtap="onCategoryTap" data-category="{{item}}">
+        <image class="category-image" src="{{getImageUrl(item.image)}}" mode="aspectFill"></image>
+        <view class="category-info">
+          <text class="category-name">{{item.name}}</text>
+          <text class="category-desc" wx:if="{{item.description}}">{{item.description}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 菜品列表 -->
+  <view class="dishes-section" wx:if="{{(currentCategoryId || type === 'hot') && !loading}}">
+    <!-- 返回按钮 -->
+    <view class="back-bar" wx:if="{{currentCategoryId}}">
+      <text class="back-btn" bindtap="onBackToCategories">← 返回分类</text>
+      <text class="current-category">{{currentCategoryName}}</text>
+    </view>
+    
+    <!-- 菜品网格 -->
+    <view class="dishes-grid" wx:if="{{dishes.length > 0}}">
+      <view class="dish-item" wx:for="{{dishes}}" wx:key="id" bindtap="onDishTap" data-dish="{{item}}">
+        <image class="dish-image" src="{{getImageUrl(item.image)}}" mode="aspectFill"></image>
+        <view class="dish-info">
+          <text class="dish-name">{{item.name}}</text>
+          <view class="dish-meta">
+            <text class="dish-difficulty" style="color: {{getDifficultyColor(item.difficulty)}}">{{getDifficultyText(item.difficulty)}}</text>
+            <text class="dish-time">{{item.cookingTime}}分钟</text>
+          </view>
+          <view class="dish-stats">
+            <text class="dish-views">{{item.viewCount || 0}}次浏览</text>
+            <text class="dish-collects">{{item.collectCount || 0}}次收藏</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 加载更多 -->
+    <view class="load-more" wx:if="{{loadingMore}}">
+      <text>加载中...</text>
+    </view>
+    
+    <!-- 没有更多 -->
+    <view class="no-more" wx:if="{{!hasMore && dishes.length > 0}}">
+      <text>没有更多了</text>
+    </view>
+    
+    <!-- 空状态 -->
+    <view class="empty" wx:if="{{dishes.length === 0}}">
+      <text class="empty-icon">🍽️</text>
+      <text class="empty-text">暂无菜品</text>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+
+  <!-- 底部导航栏 -->
+  <view class="bottom-nav">
+    <view class="nav-item" bindtap="goToHome">
+      <view class="nav-icon">🏠</view>
+      <text class="nav-text">下厨房</text>
+    </view>
+    <view class="nav-item active">
+      <view class="nav-icon">📂</view>
+      <text class="nav-text">分类</text>
+    </view>
+    <view class="nav-item" bindtap="goToFavorites">
+      <view class="nav-icon">⭐</view>
+      <text class="nav-text">收藏</text>
+    </view>
+    <view class="nav-item" bindtap="goToProfile">
+      <view class="nav-icon">👤</view>
+      <text class="nav-text">我的</text>
+    </view>
+  </view>
+</view>

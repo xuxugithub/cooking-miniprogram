@@ -1,0 +1,65 @@
+<!--pages/favorites/favorites.wxml-->
+<view class="container">
+  <!-- 操作栏 -->
+  <view class="action-bar" wx:if="{{favorites.length > 0}}">
+    <text class="favorites-count">共 {{favorites.length}} 个收藏</text>
+    <text class="clear-btn" bindtap="onClearAll">清空</text>
+  </view>
+
+  <!-- 收藏列表 -->
+  <view class="favorites-list" wx:if="{{favorites.length > 0 && !loading}}">
+    <view class="favorite-item" wx:for="{{favorites}}" wx:key="id">
+      <view class="dish-content" bindtap="onDishTap" data-dish="{{item}}">
+        <image class="dish-image" src="{{getImageUrl(item.image)}}" mode="aspectFill"></image>
+        <view class="dish-info">
+          <text class="dish-name">{{item.name}}</text>
+          <text class="dish-desc" wx:if="{{item.description}}">{{item.description}}</text>
+          <view class="dish-meta">
+            <text class="dish-difficulty" style="color: {{getDifficultyColor(item.difficulty)}}">{{getDifficultyText(item.difficulty)}}</text>
+            <text class="dish-time">{{item.cookingTime}}分钟</text>
+            <text class="dish-category">{{item.categoryName}}</text>
+          </view>
+          <view class="dish-stats">
+            <text class="dish-views">{{item.viewCount || 0}}次浏览</text>
+            <text class="dish-collects">{{item.collectCount || 0}}次收藏</text>
+          </view>
+        </view>
+      </view>
+      <view class="remove-btn" bindtap="onRemoveFavorite" data-dish="{{item}}">
+        <text class="remove-text">取消收藏</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty" wx:if="{{!loading && favorites.length === 0}}">
+    <text class="empty-icon">📝</text>
+    <text class="empty-text">还没有收藏任何菜品</text>
+    <text class="empty-tip">去首页看看有什么好吃的吧</text>
+    <button class="goto-home-btn" bindtap="gotoHome">去首页逛逛</button>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+</view>
+  <!-- 底部导航栏 -->
+  <view class="bottom-nav">
+    <view class="nav-item" bindtap="goToHome">
+      <view class="nav-icon">🏠</view>
+      <text class="nav-text">下厨房</text>
+    </view>
+    <view class="nav-item" bindtap="goToCategory">
+      <view class="nav-icon">📂</view>
+      <text class="nav-text">分类</text>
+    </view>
+    <view class="nav-item active">
+      <view class="nav-icon">⭐</view>
+      <text class="nav-text">收藏</text>
+    </view>
+    <view class="nav-item" bindtap="goToProfile">
+      <view class="nav-icon">👤</view>
+      <text class="nav-text">我的</text>
+    </view>
+  </view>

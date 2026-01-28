@@ -1,0 +1,214 @@
+/* pages/favorites/favorites.wxss */
+.container {
+  padding: 20rpx;
+  padding-bottom: 140rpx; /* 为底部导航栏留出空间 */
+}
+
+/* 操作栏 */
+.action-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 0;
+  margin-bottom: 20rpx;
+}
+
+.favorites-count {
+  font-size: 26rpx;
+  color: #666;
+}
+
+.clear-btn {
+  font-size: 26rpx;
+  color: #ff6b35;
+}
+
+/* 收藏列表 */
+.favorites-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.favorite-item {
+  background: #fff;
+  border-radius: 16rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.1);
+}
+
+.dish-content {
+  display: flex;
+  padding: 30rpx;
+}
+
+.dish-image {
+  width: 160rpx;
+  height: 120rpx;
+  border-radius: 12rpx;
+  margin-right: 20rpx;
+  flex-shrink: 0;
+}
+
+.dish-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.dish-name {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dish-desc {
+  font-size: 24rpx;
+  color: #999;
+  line-height: 1.4;
+  margin-bottom: 10rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.dish-meta {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 8rpx;
+}
+
+.dish-difficulty,
+.dish-time,
+.dish-category {
+  font-size: 22rpx;
+}
+
+.dish-time,
+.dish-category {
+  color: #999;
+}
+
+.dish-stats {
+  display: flex;
+  gap: 20rpx;
+  font-size: 20rpx;
+  color: #ff6b35;
+}
+
+.remove-btn {
+  padding: 20rpx 30rpx;
+  border-top: 1rpx solid #f0f0f0;
+  text-align: center;
+  background: #fafafa;
+}
+
+.remove-text {
+  font-size: 26rpx;
+  color: #999;
+}
+
+/* 空状态 */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100rpx 0;
+}
+
+.empty-icon {
+  font-size: 120rpx;
+  margin-bottom: 30rpx;
+}
+
+.empty-image {
+  width: 200rpx;
+  height: 200rpx;
+  margin-bottom: 30rpx;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: #999;
+  margin-bottom: 10rpx;
+}
+
+.empty-tip {
+  font-size: 24rpx;
+  color: #ccc;
+  margin-bottom: 40rpx;
+}
+
+.goto-home-btn {
+  background: linear-gradient(135deg, #ff6b35, #f7931e);
+  color: #fff;
+  border: none;
+  border-radius: 50rpx;
+  padding: 20rpx 40rpx;
+  font-size: 28rpx;
+}
+
+/* 加载状态 */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 100rpx 0;
+  color: #999;
+  font-size: 28rpx;
+}
+/* 底部导航栏 */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  display: flex;
+  padding: 10rpx 0 20rpx;
+  border-top: 1rpx solid #f0f0f0;
+  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.08);
+  z-index: 1000;
+}
+
+.nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10rpx;
+  transition: all 0.3s ease;
+}
+
+.nav-item.active {
+  color: #ff6b35;
+}
+
+.nav-item.active .nav-icon {
+  transform: scale(1.1);
+}
+
+.nav-icon {
+  font-size: 40rpx;
+  margin-bottom: 5rpx;
+  transition: all 0.3s ease;
+}
+
+.nav-text {
+  font-size: 20rpx;
+  color: #666;
+  font-weight: 500;
+}
+
+.nav-item.active .nav-text {
+  color: #ff6b35;
+  font-weight: 600;
+}

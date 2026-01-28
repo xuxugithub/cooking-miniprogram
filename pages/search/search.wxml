@@ -1,0 +1,115 @@
+<!--pages/search/search.wxml-->
+<view class="container">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <view class="search-input-wrapper">
+      <input class="search-input" 
+             placeholder="搜索菜品、食材..." 
+             value="{{keyword}}" 
+             bindinput="onSearchInput"
+             bindconfirm="onSearchConfirm"
+             focus="{{true}}"
+             confirm-type="search" />
+      <text class="search-btn" bindtap="onSearchConfirm">搜索</text>
+    </view>
+  </view>
+
+  <!-- 搜索建议区域 -->
+  <view class="search-suggestions" wx:if="{{!hasSearched}}">
+    <!-- 搜索历史 -->
+    <view class="history-section" wx:if="{{searchHistory.length > 0}}">
+      <view class="section-header">
+        <text class="section-title">搜索历史</text>
+        <text class="clear-btn" bindtap="onClearHistory">清空</text>
+      </view>
+      <view class="keywords-list">
+        <text class="keyword-item" 
+              wx:for="{{searchHistory}}" 
+              wx:key="*this"
+              bindtap="onHistoryTap" 
+              data-keyword="{{item}}">{{item}}</text>
+      </view>
+    </view>
+
+    <!-- 热门搜索 -->
+    <view class="hot-section">
+      <view class="section-title">热门搜索</view>
+      <view class="keywords-list">
+        <text class="keyword-item hot" 
+              wx:for="{{hotKeywords}}" 
+              wx:key="*this"
+              bindtap="onHotKeywordTap" 
+              data-keyword="{{item}}">{{item}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 搜索结果 -->
+  <view class="search-results" wx:if="{{hasSearched}}">
+    <!-- 结果统计 -->
+    <view class="results-header" wx:if="{{!loading}}">
+      <text class="results-count">找到 {{pagination.total}} 个相关菜品</text>
+    </view>
+
+    <!-- 结果列表 -->
+    <view class="results-list" wx:if="{{searchResults.length > 0}}">
+      <view class="result-item" wx:for="{{searchResults}}" wx:key="id" bindtap="onDishTap" data-dish="{{item}}">
+        <image class="result-image" src="{{getImageUrl(item.image)}}" mode="aspectFill"></image>
+        <view class="result-info">
+          <text class="result-name">{{item.name}}</text>
+          <text class="result-desc" wx:if="{{item.description}}">{{item.description}}</text>
+          <view class="result-meta">
+            <text class="result-difficulty" style="color: {{getDifficultyColor(item.difficulty)}}">{{getDifficultyText(item.difficulty)}}</text>
+            <text class="result-time">{{item.cookingTime}}分钟</text>
+            <text class="result-category">{{item.categoryName}}</text>
+          </view>
+          <view class="result-stats">
+            <text class="result-views">{{item.viewCount || 0}}次浏览</text>
+            <text class="result-collects">{{item.collectCount || 0}}次收藏</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 加载更多 -->
+    <view class="load-more" wx:if="{{loadingMore}}">
+      <text>加载中...</text>
+    </view>
+
+    <!-- 没有更多 -->
+    <view class="no-more" wx:if="{{!hasMore && searchResults.length > 0}}">
+      <text>没有更多了</text>
+    </view>
+
+    <!-- 空结果 -->
+    <view class="empty-results" wx:if="{{!loading && searchResults.length === 0}}">
+      <text class="empty-icon">🔍</text>
+      <text class="empty-text">没有找到相关菜品</text>
+      <text class="empty-tip">试试其他关键词吧</text>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading" wx:if="{{loading}}">
+    <text>搜索中...</text>
+  </view>
+</view>
+  <!-- 底部导航栏 -->
+  <view class="bottom-nav">
+    <view class="nav-item" bindtap="goToHome">
+      <view class="nav-icon">🏠</view>
+      <text class="nav-text">下厨房</text>
+    </view>
+    <view class="nav-item" bindtap="goToCategory">
+      <view class="nav-icon">📂</view>
+      <text class="nav-text">分类</text>
+    </view>
+    <view class="nav-item" bindtap="goToFavorites">
+      <view class="nav-icon">⭐</view>
+      <text class="nav-text">收藏</text>
+    </view>
+    <view class="nav-item" bindtap="goToProfile">
+      <view class="nav-icon">👤</view>
+      <text class="nav-text">我的</text>
+    </view>
+  </view>
